@@ -34,8 +34,12 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## API 
 
-Go to back directory.
+Go to `back` directory.
+
+## INSTALL EXPRESS & MONGOOSE
+
+Run `npm install -s express dotenv` and  `npm i mongoose`
 
 ## RUN NODE (EXPRESS) SERVER
 
-Run `node server` to execute the api
+Run `npm start` to execute the api
