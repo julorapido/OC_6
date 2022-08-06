@@ -25,10 +25,28 @@ const sauceSchema = new mongoose.Schema(
         },
         imageUrl: {
             type: String,
-            default: ""
-        }
+            default: "./apps"
+        },
+        heat: {
+            type: Number,
+            min: 1,
+            max: 10,
+            required: true
+        },
+        likes:{
+            type: Number,
+            min: 0
+        },
+        dislikes:{
+            type: Number,
+            min: 0
+        },
+
+        
     }
-)
+);
+
+
 
 const sauceModel = mongoose.model("sauce", sauceSchema);
 module.exports = sauceModel;

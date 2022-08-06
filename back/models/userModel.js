@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 // Importation de isEMAIL de la bibliothèque validator
 const { isEmail} = require('validator');
 const userSchema = new mongoose.Schema(
@@ -20,7 +21,14 @@ const userSchema = new mongoose.Schema(
 {
     timestamps: true
 }
-)
+);
+
+// play function before save into DB
+userSchema.pre("save", async function (next){
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+});
 
 const UserModel = mongoose.model('user', userSchema);
 module.exports = UserModel;

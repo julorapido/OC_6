@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 mongoose
     .connect(
-        "mongodb+srv://" + process.env.DB_USER_PASS + "@projet6cluster.1ewdt.mongodb.net/local",
+        "mongodb+srv://" + process.env.DB_USER_PASS + "@projet6cluster.1ewdt.mongodb.net/test",
         {
-            //useCreateIndex: true, 
-            //useFindAndModify: false, 
+            useCreateIndex: true, 
+            useFindAndModify: false, 
             useNewUrlParser: true, 
             useUnifiedTopology: true 
         }
