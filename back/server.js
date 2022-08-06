@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/auth.routes');
+const sauceRoutes = require('./routes/sauce.routes');
 require('dotenv').config({path: './config/.env'});
 require('./config/db');
 const app = express();
 const cors = require('cors');
+const multer = require('multer');
 
 const corsOptions = {
   origin: '*',
@@ -12,6 +14,8 @@ const corsOptions = {
   'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
   'preflightContinue': false
 }
+app.use(express.static(__dirname + '/public'));
+app.use('/uploads', express.static('uploads'));
 
 app.use(cors({corsOptions}));
 app.use(bodyParser.json());
@@ -25,4 +29,5 @@ app.get('/', function (req, res) {
   res.send('GET request to the homepage');
 }); 
 
-app.use('/api/auth', authRoutes);  
+app.use('/api/auth', authRoutes);
+app.use('/api/sauces', authRoutes);  
