@@ -25,8 +25,6 @@ module.exports.getSpecificSauce = async (req, res) => {
 
 
 module.exports.postNewSauce = async (req ,res) => {
-    const path = req.file.path.replace(/\\/g, "/");
-    console.log(path);
     const newSauce = new SauceModel({
         userId:  req.body.userId,
         name:  req.body.name,
@@ -48,13 +46,14 @@ module.exports.postNewSauce = async (req ,res) => {
     }
 }
 
-module.exports.deleteSauce = async (req, res) => {
+module.exports.deleteSpecificSauce = async (req, res) => {
     if(!ObjectID.isValid(req.params.id))
         return res.status(401).error
     
-    try{
-
-    }catch (err){
-        
-    }
+      SauceModel.findByIdAndDelete(req.params.id,
+            (err ,docs) => {
+                if (!err) res.send(docs)
+                else res.send(err)
+            }
+        )
 }

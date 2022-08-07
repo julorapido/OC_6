@@ -7,5 +7,6 @@ router.get('/', sauceController.getAllSauces);
 
 router.post("/", uploadMiddleware.uploadImage,sauceController.postNewSauce);
 router.get("/:id", sauceController.getSpecificSauce);
+router.delete("/:id", sauceController.deleteSpecificSauce);
 
 module.exports = router;
