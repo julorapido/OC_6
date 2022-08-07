@@ -2,10 +2,12 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 // Importation de isEMAIL de la bibliothèque validator
 const { isEmail} = require('validator');
+var uniqueValidator = require('mongoose-unique-validator');
 const userSchema = new mongoose.Schema(
 {
     email: {
         type: String,
+        unique: true,
         required: true,
         validate: [isEmail],
         lowercase: true,
@@ -42,5 +44,6 @@ userSchema.statics.login = async function(email, password) {
     }
     throw Error('incorrect email');
 }
+userSchema.plugin(uniqueValidator);
 const UserModel = mongoose.model('user', userSchema);
 module.exports = UserModel;
