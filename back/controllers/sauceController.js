@@ -1,5 +1,6 @@
 const SauceModel = require('../models/sauceModel');
 const ObjectID = require("mongoose").Types.ObjectId;
+
 module.exports.getAllSauces = (req, res) => {
     SauceModel.find((err, docs) => {
         if (!err) res.send(docs)
@@ -14,7 +15,7 @@ module.exports.getSpecificSauce = async (req, res) => {
         return res.status(401).error
 
      try {
-                const WholeSauce = await SauceModel.findById(req.params.id);
+        const WholeSauce = await SauceModel.findById(req.params.id);
                 return res.status(201).json(WholeSauce)
         }catch(err){
                 return res.status(400).send(err);
@@ -24,17 +25,14 @@ module.exports.getSpecificSauce = async (req, res) => {
 
 
 module.exports.postNewSauce = async (req ,res) => {
-    const {sauce} = req.body
-
-    sauce = JSON.parse(sauce);
-    console.log(sauce);
+    //const path = req.file.path.replace(/\\/g, "/");
     const newSauce = new SauceModel({
-        userId: sauce.userId,
-        name: sauce.name,
-        manufacturer: sauce.manufacturer,
-        description: sauce.description,
-            imageUrl: sauce.imageUrl,
-        heat: req.body.sauce.heat,
+        userId:  req.body.userId,
+        name:  req.body.name,
+        manufacturer:  req.body.manufacturer,
+        description:  req.body.description,
+        imageUrl: "http://localhost:4200/",
+        heat: req.body.heat,
         likes: 0,
         dislikes: 0,
         userLiked: [],

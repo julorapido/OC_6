@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/auth.routes');
 const sauceRoutes = require('./routes/sauce.routes');
+const {checkUser} = require('./middleware/authMiddleware');
 require('dotenv').config({path: './config/.env'});
 require('./config/db');
 const app = express();
@@ -25,9 +26,13 @@ app.listen(process.env.PORT , () => {
   console.log(`Listening on port ${process.env.PORT}`);
 })
 
+//get request to check access to api
 app.get('/', function (req, res) {
   res.send('GET request to the homepage');
 }); 
 
 app.use('/api/auth', authRoutes);
-app.use('/api/sauces', authRoutes);  
+app.use('/api/sauces', sauceRoutes);  
+
+// jwt
+//app.use('/api/sauces', checkUser); 
