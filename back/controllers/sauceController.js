@@ -57,3 +57,61 @@ module.exports.deleteSpecificSauce = async (req, res) => {
             }
         )
 }
+
+
+module.exports.likeSpecificSauce = async (req,res) => {
+    if(!ObjectID.isValid(req.params.id))
+        return res.status(401).error
+
+    const like = req.body.like
+
+    if (ObjectID.isValid(req.body.userId) == true){
+        SauceModel.findOne({
+            _id: req.params.id
+        }).then(sauce => {
+            if (like == 0){
+                if (sauce.usersLiked.indexOf(req.body.userId) != -1){ //// User dans la table Liked
+                    sauce.likes--; // Annulation du like
+                    sauce.usersLiked.splice(sauce.usersLiked.indexOf(req.body.userId), 1);
+                }else {
+                    sauce.dislikes--; // Annulation du dislike
+                    sauce.userDisliked.splice(sauce.userDisliked.indexOf(req.body.userId), 1);
+                }
+                sauce.save();
+            }
+             if (like == 1){
+                if (sauce.usersLiked.indexOf(req.body.userId) != -1){ //// User deja dans table Liked
+                    return res.status(401).send("User already liked post");
+                }else {
+                    sauce.likes++;
+                    sauce.usersLiked.push(req.body.userId);
+                    sauce.save();
+                }
+        
+            }
+            else if (like == -1){
+                if (sauce.userDisliked.indexOf(req.body.userId) != -1){ //// User deja dans table Disliked
+                    return res.status(401).send("User already disliked post");
+                }else {
+                    sauce.dislikes++;
+                    sauce.userDisliked.push(req.body.userId);
+                    sauce.save();
+                }
+               
+            }
+            return res.status(200).json(sauce);
+        } 
+        ).catch(err => {
+            res.status(401).send(err);
+        })
+
+    }else {
+       console.log("Wrong user id")
+       return res.status(401).send("wrong user id")
+   }
+} 
+
+module.exports.updateSauce = async (req,res) => {
+    
+
+} 
