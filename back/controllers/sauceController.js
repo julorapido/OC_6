@@ -1,5 +1,6 @@
 const SauceModel = require('../models/sauceModel');
 const ObjectID = require("mongoose").Types.ObjectId;
+const fs = require('fs');
 
 module.exports.getAllSauces = (req, res) => {
     SauceModel.find((err, docs) => {
@@ -12,7 +13,7 @@ module.exports.getAllSauces = (req, res) => {
 
 module.exports.getSpecificSauce = async (req, res) => {
     if (!ObjectID.isValid(req.params.id))
-        return res.status(401).error
+        return res.status(403).error
 
      try {
         const WholeSauce = await SauceModel.findById(req.params.id);
@@ -30,13 +31,14 @@ module.exports.postNewSauce = async (req ,res) => {
         name:  req.body.name,
         manufacturer:  req.body.manufacturer,
         description:  req.body.description,
-        imageUrl: "http://localhost:4200/",
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         heat: req.body.heat,
         likes: 0,
         dislikes: 0,
         userLiked: [],
         userDisliked : []
     })
+    console.log(req.file.filename);
     try{
         const sauceSave = await newSauce.save();
         return res.status(201).json(sauceSave);
@@ -50,18 +52,22 @@ module.exports.deleteSpecificSauce = async (req, res) => {
     if(!ObjectID.isValid(req.params.id))
         return res.status(401).error
     
-      SauceModel.findByIdAndDelete(req.params.id,
-            (err ,docs) => {
-                if (!err) res.send(docs)
-                else res.send(err)
-            }
-        )
+        const sauce = await SauceModel.findById(req.params.id);
+      //const sauce = SauceModel.findByIdAndDelete(req.params.id,
+          //  (err ,docs) => {
+        //        if (!err) res.send(docs)
+      //          else res.send(err)
+     //       }
+     //   )
+
+    const filename = sauce.imageUrl;
+    console.log(sauce);
 }
 
 
 module.exports.likeSpecificSauce = async (req,res) => {
     if(!ObjectID.isValid(req.params.id))
-        return res.status(401).error
+        return res.status(403).error
 
     const like = req.body.like
 
@@ -113,5 +119,11 @@ module.exports.likeSpecificSauce = async (req,res) => {
 
 module.exports.updateSauce = async (req,res) => {
     
+    if (req.file){
+        console.log("pas d'image");
+        return ("e")
+    }else {
+        console.log("image présente");
+    }
 
 } 

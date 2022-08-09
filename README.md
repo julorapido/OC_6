@@ -36,9 +36,9 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 Go to `back` directory.
 
-## INSTALL EXPRESS & MONGOOSE
+## INSTALL PACKAGES
 
-Run `npm install -s express dotenv` and  `npm i mongoose`
+Run `npm install -s`
 
 ## RUN NODE (EXPRESS) SERVER
 
