@@ -1,6 +1,7 @@
 const SauceModel = require('../models/sauceModel');
 const ObjectID = require("mongoose").Types.ObjectId;
 const fs = require('fs');
+const { json } = require('body-parser');
 
 module.exports.getAllSauces = (req, res) => {
     SauceModel.find((err, docs) => {
@@ -26,14 +27,16 @@ module.exports.getSpecificSauce = async (req, res) => {
 
 
 module.exports.postNewSauce = async (req ,res) => {
+    const parsedSauce = JSON.parse(req.body.sauce);
+    console.log(parsedSauce);
     const newSauce = new SauceModel({
-        userId:  req.body.userId,
-        name:  req.body.name,
-        manufacturer:  req.body.manufacturer,
-        description:  req.body.description,
-        mainPepper:  req.body.mainPepper,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        heat: req.body.heat,
+        userId:  parsedSauce.userId,
+        name:  parsedSauce.name,
+        manufacturer:  parsedSauce.manufacturer,
+        description:  parsedSauce.description,
+        mainPepper:  parsedSauce.mainPepper,
+        imageUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`,
+        heat: parsedSauce.heat,
         likes: 0,
         dislikes: 0,
         userLiked: [],
@@ -53,7 +56,7 @@ module.exports.deleteSpecificSauce = async (req, res) => {
         return res.status(401).error
     
      const getSauce = await SauceModel.findById(req.params.id);
-    const filename = getSauce.imageUrl.split('/images/')[1];
+    const filename = getSauce.imageUrl.split('/uploads/')[1];
     fs.unlink(`uploads/${filename}`, (err => {if (err) console.log(err)}));
 
        SauceModel.findByIdAndDelete(req.params.id,
@@ -135,20 +138,19 @@ module.exports.updateSauce = async (req,res) => {
         }
         
     }else {
-        console.log("image présente");
         /// SUPPRESSION DE L'IMAGE PRÉCÉDENTE////////////////////
         const getSauce = await SauceModel.findById(req.params.id);
-        const filename = getSauce.imageUrl.split('/images/')[1];
+        const filename = getSauce.imageUrl.split('/uploads/')[1];
         fs.unlink(`uploads/${filename}`, (err => {if (err) console.log(err)}));
         ////////////////////////////////////////////////////////////
         try{
             const updatedSauce = await SauceModel.findByIdAndUpdate(req.params.id, { $set: {
-                name: req.body.name,
-                manufacturer: req.body.manufacturer,
-                description: req.body.description,
-                mainPepper:  req.body.mainPepper,
-                imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-                heat: req.body.heat
+                name: req.body.sauce.name,
+                manufacturer: req.body.sauce.manufacturer,
+                description: req.body.sauce.description,
+                mainPepper:  req.body.sauce.mainPepper,
+                imageUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`,
+                heat: req.body.sauce.heat
             }});
 
             return res.status(201).json(updatedSauce);
