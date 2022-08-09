@@ -54,7 +54,7 @@ module.exports.deleteSpecificSauce = async (req, res) => {
      const getSauce = await SauceModel.findById(req.params.id);
     const filename = getSauce.imageUrl.split('/images/')[1];
     fs.unlink(`uploads/${filename}`, (err => {if (err) console.log(err)}));
-    console.log(filename);
+
        SauceModel.findByIdAndDelete(req.params.id,
             (err ,docs) => {
                if (!err) res.send(docs)
@@ -118,13 +118,40 @@ module.exports.likeSpecificSauce = async (req,res) => {
 } 
 
 module.exports.updateSauce = async (req,res) => {
-    //imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
 
-    if (req.file){
-        console.log("pas d'image");
-        return ("e")
+    if (!req.file){
+        try{
+            const updatedSauce = await SauceModel.findByIdAndUpdate(req.params.id, { $set: {
+                name: req.body.name,
+                manufacturer: req.body.manufacturer,
+                description: req.body.description,
+                heat: req.body.heat
+            }});
+            return res.status(201).json(updatedSauce);
+        }catch(err){
+            return res.status(401).send(err);
+        }
+        
     }else {
         console.log("image présente");
+        /// SUPPRESSION DE L'IMAGE PRÉCÉDENTE////////////////////
+        const getSauce = await SauceModel.findById(req.params.id);
+        const filename = getSauce.imageUrl.split('/images/')[1];
+        fs.unlink(`uploads/${filename}`, (err => {if (err) console.log(err)}));
+        ////////////////////////////////////////////////////////////
+        try{
+            const updatedSauce = await SauceModel.findByIdAndUpdate(req.params.id, { $set: {
+                name: req.body.name,
+                manufacturer: req.body.manufacturer,
+                description: req.body.description,
+                imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+                heat: req.body.heat
+            }});
+
+            return res.status(201).json(updatedSauce);
+        }catch(err){
+            return res.status(401).send(err);
+        }
     }
 
 } 
