@@ -38,7 +38,6 @@ module.exports.postNewSauce = async (req ,res) => {
         userLiked: [],
         userDisliked : []
     })
-    console.log(req.file.filename);
     try{
         const sauceSave = await newSauce.save();
         return res.status(201).json(sauceSave);
@@ -52,16 +51,17 @@ module.exports.deleteSpecificSauce = async (req, res) => {
     if(!ObjectID.isValid(req.params.id))
         return res.status(401).error
     
-        const sauce = await SauceModel.findById(req.params.id);
-      //const sauce = SauceModel.findByIdAndDelete(req.params.id,
-          //  (err ,docs) => {
-        //        if (!err) res.send(docs)
-      //          else res.send(err)
-     //       }
-     //   )
+     const getSauce = await SauceModel.findById(req.params.id);
+    const filename = getSauce.imageUrl.split('/images/')[1];
+    fs.unlink(`uploads/${filename}`, (err => {if (err) console.log(err)}));
+    console.log(filename);
+       SauceModel.findByIdAndDelete(req.params.id,
+            (err ,docs) => {
+               if (!err) res.send(docs)
+               else res.send(err)
+           }
+       );
 
-    const filename = sauce.imageUrl;
-    console.log(sauce);
 }
 
 
@@ -118,7 +118,8 @@ module.exports.likeSpecificSauce = async (req,res) => {
 } 
 
 module.exports.updateSauce = async (req,res) => {
-    
+    //imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+
     if (req.file){
         console.log("pas d'image");
         return ("e")
