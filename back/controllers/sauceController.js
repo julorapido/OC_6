@@ -39,8 +39,8 @@ module.exports.postNewSauce = async (req ,res) => {
         heat: parsedSauce.heat,
         likes: 0,
         dislikes: 0,
-        userLiked: [],
-        userDisliked : []
+        usersLiked: [],
+        usersDisliked : []
     })
     try{
         const sauceSave = await newSauce.save();
@@ -85,7 +85,7 @@ module.exports.likeSpecificSauce = async (req,res) => {
                     sauce.usersLiked.splice(sauce.usersLiked.indexOf(req.body.userId), 1);
                 }else {
                     sauce.dislikes--; // Annulation du dislike
-                    sauce.userDisliked.splice(sauce.userDisliked.indexOf(req.body.userId), 1);
+                    sauce.usersDisliked.splice(sauce.usersDisliked.indexOf(req.body.userId), 1);
                 }
                 sauce.save();
             }
@@ -100,11 +100,11 @@ module.exports.likeSpecificSauce = async (req,res) => {
         
             }
             else if (like == -1){
-                if (sauce.userDisliked.indexOf(req.body.userId) != -1){ //// User deja dans table Disliked
+                if (sauce.usersDisliked.indexOf(req.body.userId) != -1){ //// User deja dans table Disliked
                     return res.status(401).send("User already disliked post");
                 }else {
                     sauce.dislikes++;
-                    sauce.userDisliked.push(req.body.userId);
+                    sauce.usersDisliked.push(req.body.userId);
                     sauce.save();
                 }
                

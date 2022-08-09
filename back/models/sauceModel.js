@@ -51,7 +51,7 @@ const sauceSchema = new mongoose.Schema(
         usersLiked:{
             type: [String]
         },
-        userDisliked:{
+        usersDisliked:{
             type: [String]
         }
         
