@@ -24,6 +24,11 @@ const sauceSchema = new mongoose.Schema(
             required: true,
             lowercase: true
         },
+        mainPepper: {
+            type: String,
+            required: true,
+            lowercase: true
+        },
         imageUrl: {
             type: String,
             default: "./uploads",

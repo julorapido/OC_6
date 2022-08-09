@@ -31,6 +31,7 @@ module.exports.postNewSauce = async (req ,res) => {
         name:  req.body.name,
         manufacturer:  req.body.manufacturer,
         description:  req.body.description,
+        mainPepper:  req.body.mainPepper,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         heat: req.body.heat,
         likes: 0,
@@ -125,6 +126,7 @@ module.exports.updateSauce = async (req,res) => {
                 name: req.body.name,
                 manufacturer: req.body.manufacturer,
                 description: req.body.description,
+                mainPepper:  req.body.mainPepper,
                 heat: req.body.heat
             }});
             return res.status(201).json(updatedSauce);
@@ -144,6 +146,7 @@ module.exports.updateSauce = async (req,res) => {
                 name: req.body.name,
                 manufacturer: req.body.manufacturer,
                 description: req.body.description,
+                mainPepper:  req.body.mainPepper,
                 imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
                 heat: req.body.heat
             }});
