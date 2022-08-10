@@ -20,6 +20,7 @@ export class AuthService {
   }
 
   getToken() {
+    console.log(this.authToken);
     return this.authToken;
   }
 

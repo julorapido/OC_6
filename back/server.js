@@ -2,12 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/auth.routes');
 const sauceRoutes = require('./routes/sauce.routes');
-const {checkUser} = require('./middleware/authMiddleware');
 require('dotenv').config({path: './config/.env'});
 require('./config/db');
 const app = express();
 const cors = require('cors');
-const multer = require('multer');
 
 const corsOptions = {
   origin: '*',
@@ -33,6 +31,3 @@ app.get('/', function (req, res) {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/sauces', sauceRoutes);  
-
-// jwt
-//app.use('/api/sauces', checkUser); 

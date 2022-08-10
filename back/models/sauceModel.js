@@ -4,14 +4,11 @@ const sauceSchema = new mongoose.Schema(
         userId: {
             type: String,
             required: true,
-            unique: false,
-            index: true,
-            lowercase: true
         },
         name: {
             type: String,
             required: true,
-            trim: true,
+            trim    : true,
             lowercase: true
         },
         manufacturer: {
