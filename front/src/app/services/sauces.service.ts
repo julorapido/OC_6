@@ -53,6 +53,7 @@ export class SaucesService {
   createSauce(sauce: Sauce, image: File) {
     const formData = new FormData();
     formData.append('sauce', JSON.stringify(sauce));
+    console.log(JSON.stringify(sauce));
     formData.append('image', image);
     return this.http.post<{ message: string }>('http://localhost:3000/api/sauces', formData).pipe(
       catchError(error => throwError(error.error.message))

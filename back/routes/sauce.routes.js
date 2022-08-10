@@ -13,7 +13,7 @@ router.delete("/:id",sauceController.deleteSpecificSauce);
 router.post("/:id/like", sauceController.likeSpecificSauce);
 router.put("/:id", multer.uploadImage, sauceController.updateSauce);
 
-router.use("/", jwtAuth.checkToken);
+//router.use("/", jwtAuth.checkToken);
 
 
 module.exports = router;

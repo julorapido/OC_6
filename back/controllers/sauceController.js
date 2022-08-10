@@ -28,7 +28,6 @@ module.exports.getSpecificSauce = async (req, res) => {
 
 module.exports.postNewSauce = async (req ,res) => {
     const parsedSauce = JSON.parse(req.body.sauce);
-    console.log(parsedSauce);
     const newSauce = new SauceModel({
         userId:  parsedSauce.userId,
         name:  parsedSauce.name,
