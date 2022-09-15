@@ -1,7 +1,6 @@
 const SauceModel = require('../models/sauceModel');
 const ObjectID = require("mongoose").Types.ObjectId;
 const fs = require('fs');
-const { json } = require('body-parser');
 
 module.exports.getAllSauces = (req, res) => {
     SauceModel.find((err, docs) => {
@@ -121,41 +120,43 @@ module.exports.likeSpecificSauce = async (req,res) => {
 } 
 
 module.exports.updateSauce = async (req,res) => {
+    const sauce_UserId = await SauceModel.findById(req.params.id);
+   if (req.body.userId == sauce_UserId.userId){///// VERIFICATION DE L'ID DE L'UTILISATEUR AVEC L'USERID DE LA SAUCE
+            if (!req.file){
+                try{
+                    const updatedSauce = await SauceModel.findByIdAndUpdate(req.params.id, { $set: {
+                        name: req.body.name,
+                        manufacturer: req.body.manufacturer,
+                        description: req.body.description,
+                        mainPepper:  req.body.mainPepper,
+                        heat: req.body.heat
+                    }});
+                    return res.status(201).json(updatedSauce);
+                }catch(err){
+                    return res.status(401).send(err);
+                }    
+            }else {
+                /// SUPPRESSION DE L'IMAGE PRÉCÉDENTE////////////////////
+                const getSauce = await SauceModel.findById(req.params.id);
+                const filename = getSauce.imageUrl.split('/uploads/')[1];
+                fs.unlink(`uploads/${filename}`, (err => {if (err) console.log(err)}));
+                ////////////////////////////////////////////////////////////
+                try{
+                    const updatedSauce = await SauceModel.findByIdAndUpdate(req.params.id, { $set: {
+                        name: req.body.sauce.name,
+                        manufacturer: req.body.sauce.manufacturer,
+                        description: req.body.sauce.description,
+                        mainPepper:  req.body.sauce.mainPepper,
+                        imageUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`,
+                        heat: req.body.sauce.heat
+                    }});
 
-    if (!req.file){
-        try{
-            const updatedSauce = await SauceModel.findByIdAndUpdate(req.params.id, { $set: {
-                name: req.body.name,
-                manufacturer: req.body.manufacturer,
-                description: req.body.description,
-                mainPepper:  req.body.mainPepper,
-                heat: req.body.heat
-            }});
-            return res.status(201).json(updatedSauce);
-        }catch(err){
-            return res.status(401).send(err);
-        }
-        
-    }else {
-        /// SUPPRESSION DE L'IMAGE PRÉCÉDENTE////////////////////
-        const getSauce = await SauceModel.findById(req.params.id);
-        const filename = getSauce.imageUrl.split('/uploads/')[1];
-        fs.unlink(`uploads/${filename}`, (err => {if (err) console.log(err)}));
-        ////////////////////////////////////////////////////////////
-        try{
-            const updatedSauce = await SauceModel.findByIdAndUpdate(req.params.id, { $set: {
-                name: req.body.sauce.name,
-                manufacturer: req.body.sauce.manufacturer,
-                description: req.body.sauce.description,
-                mainPepper:  req.body.sauce.mainPepper,
-                imageUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`,
-                heat: req.body.sauce.heat
-            }});
-
-            return res.status(201).json(updatedSauce);
-        }catch(err){
-            return res.status(401).send(err);
-        }
-    }
-
+                    return res.status(201).json(updatedSauce);
+                }catch(err){
+                    return res.status(401).send(err);
+                }
+            }
+   }else{
+    return res.status(403).send("403 Unauthorized request");
+   }
 } 

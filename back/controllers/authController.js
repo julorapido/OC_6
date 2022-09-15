@@ -31,6 +31,10 @@ module.exports.login = async (req,res) => {
     }catch(err){
         return res.status(500).send({err});
     }
+}
 
 
+module.exports.logout = (req, res) => {
+    res.clearCookie("jwt");
+    res.redirect("/");
 }
