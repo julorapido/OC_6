@@ -77,7 +77,7 @@ module.exports.likeSpecificSauce = async (req,res) => {
         SauceModel.findOne({
             _id: req.params.id
         }).then(sauce => {
-            if (like == 0){
+            if (like == 0){ ///// ANNULATION DU LIKE ET DISLIKE
                 if (sauce.usersLiked.indexOf(req.body.userId) != -1){ //// User dans la table Liked
                     sauce.likes--; // Annulation du like
                     sauce.usersLiked.splice(sauce.usersLiked.indexOf(req.body.userId), 1);
@@ -87,7 +87,7 @@ module.exports.likeSpecificSauce = async (req,res) => {
                 }
                 sauce.save();
             }
-             if (like == 1){
+             if (like == 1){ /// LIKE 
                 if (sauce.usersLiked.indexOf(req.body.userId) != -1){ //// User deja dans table Liked
                     return res.status(401).send("User already liked post");
                 }else {
@@ -97,7 +97,7 @@ module.exports.likeSpecificSauce = async (req,res) => {
                 }
         
             }
-            else if (like == -1){
+            else if (like == -1){ //// DISLIKE
                 if (sauce.usersDisliked.indexOf(req.body.userId) != -1){ //// User deja dans table Disliked
                     return res.status(401).send("User already disliked post");
                 }else {
